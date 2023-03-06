@@ -30,5 +30,10 @@ A project of collaborative filtering recommendation system, which using spotify 
 
 - contained only the screenshot of each page created 
 
+### THE APP
 
-![Image](images/page1-overview.png)
+- this is the preview of the last page created which display the top 10 songs recommended for selected user, you may refer to "images" folder for other pages. 
+
+![Image](images/page3-deploy.png)
+
+Thank you for reading !!!
