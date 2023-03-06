@@ -14,7 +14,7 @@ from sklearn.preprocessing import MinMaxScaler
 from PIL import Image
 
 
-#%% Static 
+#%% Static Path
 
 # path of dataset
 DATA_PATH = os.path.join(os.getcwd(),'spotify.csv')
@@ -42,7 +42,7 @@ def add_bg(image_file):
         unsafe_allow_html=True
         )
 
-# count outliers
+# detect and count outliers
 def outliers_count(data):
     q1 = data.quantile(0.25)
     q3 = data.quantile(0.75)
@@ -61,7 +61,7 @@ def cleaning(df):
     return clean_df
 
 
-# recommendation + reorder 
+# recommendation list
 def similar_tracks(track_id, track_df, track_scaled, cosine_sim):
     track_idx = track_df.index[track_df['id'] == track_id][0]
     sim_scores = list(enumerate(cosine_sim[track_idx]))
@@ -76,7 +76,7 @@ def similar_tracks(track_id, track_df, track_scaled, cosine_sim):
 # set webpage title and icon
 st.set_page_config(page_title="Spotify RecSys", page_icon=spotify2)
 
-# set background
+# set background using CSS
 st.markdown(
     """
     <style>
@@ -123,13 +123,17 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# set background by calling "add_bg" function
 add_bg('bg2.jpg')
 
 # set page header with logo
 headcols = st.columns([1,4])
 with headcols[0]: 
+    # spotify logo
     st.image(spotify2, width=90)
 with headcols[1]: 
+    # title
     st.markdown("""# Spotify Song Recommender""")
 
 # set sidebar header
@@ -137,6 +141,7 @@ with st.sidebar:
     
     sidecols = st.columns([1,5,1])
     with sidecols[1]:
+        # spotify logo 
         st.image(spotify1, width=200)
     
     # project overview
@@ -164,13 +169,14 @@ tabs = st.tabs(['Overview','Explore','Deploy'])
 
 with tabs[0]: 
     
+    # read data from .csv file and take first 3k data as sample
     data = pd.read_csv(DATA_PATH, encoding='unicode_escape')[:3000]
     
     st.write("##### Data Preview #####")
     # show uploaded data
     st.table(data.head())
     
-    # show general statistic 
+    # table 1: general statistic 
     stats = {'Number of Rows': [len(data)],
              'Number of Columns': [len(data.columns)],
              'Missing Cells': [data.isnull().sum().sum()],
@@ -181,17 +187,21 @@ with tabs[0]:
     stats_display = pd.DataFrame(data=stats).astype(str).transpose()
     stats_display.rename(columns = {0:"Values"}, inplace=True)
     
+    # table 2: count total categorical and numerical columns
     fea_type = {'Categorical Columns': [len(data.select_dtypes(include=['object']).columns)],
                 'Numerical Columns': [len(data.select_dtypes(exclude=['object']).columns)]
                 }
     fea_type_display = pd.DataFrame(data=fea_type).astype(str).transpose()
     fea_type_display.rename(columns = {0:"Values"}, inplace=True)
     
+    # display the above results in streamlit app
     st.write("##### Descriptive Statistics #####")
     stats_cols = st.columns(2)
     with stats_cols[0]:
+        # table 1
         st.table(stats_display)
     with stats_cols[1]:
+        # table 2
         st.table(fea_type_display)
 
 
@@ -199,6 +209,7 @@ with tabs[0]:
 
 with tabs[1]:
     
+    # separate features based on categorical and numerical data type
     num_features = ['acousticness', 'danceability', 'duration_ms', 'energy',
                     'explicit', 'instrumentalness', 'key', 'liveness', 
                     'loudness', 'mode', 'popularity', 'speechiness', 'tempo',
@@ -209,7 +220,7 @@ with tabs[1]:
         
         selected_fea = st.selectbox('Select a feature',num_features,index=9)
         
-        # visualize the selected features
+        # visualize the selected numerical features
         dataviz = pd.DataFrame(data[selected_fea].value_counts()).reset_index()
         dataviz.columns = ['data_values','count']
         chart = alt.Chart(dataviz).mark_bar().encode(
@@ -224,6 +235,7 @@ with tabs[1]:
         chart = chart.configure(background='#232323')
         st.altair_chart(chart, use_container_width=True)
         
+        # count and display the general statistics of selected numerical feature
         num_cols = st.columns(2)
         with num_cols[0]:
             datades = pd.DataFrame(data[selected_fea].describe())
@@ -244,7 +256,7 @@ with tabs[1]:
         
         selected_fea = st.selectbox('Select a feature',cat_features,index=0)
         
-        # visualize the selected features
+        # visualize the selected categorical features
         dataviz = pd.DataFrame(data[selected_fea].value_counts()).reset_index()
         dataviz.columns = ['data_values','count']
         chart = alt.Chart(dataviz).mark_bar().encode(
@@ -259,6 +271,7 @@ with tabs[1]:
         chart = chart.configure(background='#232323')
         st.altair_chart(chart, use_container_width=True)
         
+        # count and display the general statistics of selected categorical feature
         num_cols = st.columns(2)
         with num_cols[0]:
             datades = pd.DataFrame(data[selected_fea].describe())
@@ -280,32 +293,31 @@ with tabs[1]:
         # plot the heatmap
         fig, ax = plt.subplots(facecolor="#2a4a35")
         ax = sns.heatmap(corr, annot=True, cmap='viridis', annot_kws={"fontsize":5})
+        
         # set the fontsize of both x and y axis
         ax.xaxis.set_tick_params(labelsize=6, labelcolor="white", color="white")
         ax.yaxis.set_tick_params(labelsize=6, labelcolor="white", color="white")
-        # set the color of background
-        # ax.set_facecolor("black")
+        
         # set the fontsize of colorbar
         cbar = ax.collections[0].colorbar
         cbar.ax.tick_params(labelsize=6, labelcolor="white", color="white")
-        # plot the chart
+        
+        # display the chart in streamlit 
         st.pyplot(fig)
     
     with st.expander('Explore'):
         
-        # Select x and y columns
+        # let users select x and y columns
         xy_cols = st.columns(2)
         with xy_cols[0]:
             x_column = st.selectbox("Select a feature ( *x-axis* )", num_features, index=0)
         with xy_cols[1]:
             y_column = st.selectbox("Select a feature ( *y-axis* )", num_features, index=1)
         
-        # Create plot
+        # create scatter plot with some restriction setting 
         if "data" in locals() and not data.empty and x_column != y_column:
             fig = px.scatter(data, x=x_column, y=y_column, width=670, height=400)
             fig.update_traces(marker=dict(color='#1ed760'))
-            # fig.update_layout({'plot_bgcolor':'rgba(0,0,0,0)',
-            #                    'paper_bgcolor':'rgba(0,0,0,0)',})
             st.plotly_chart(fig)
         elif x_column == y_column:
             st.error("Please select different columns for x and y axes.")
@@ -318,7 +330,7 @@ with tabs[1]:
 
 with tabs[2]:
     
-    # data cleaning
+    # data cleaning by calling the "cleaning" function
     clean_data = cleaning(data)
     
     # feature selection
@@ -332,7 +344,7 @@ with tabs[2]:
     # cosine similarity matrix
     cosine_sim = cosine_similarity(scaled_df)
     
-    # select user id from list 
+    # let users select user id from list 
     id_list = data['id']
     
     id_cols = st.columns(2)
@@ -344,14 +356,13 @@ with tabs[2]:
     similar_tracks = pd.DataFrame(similar_tracks)
     similar_tracks.columns = ['name','artists','score']
     
-    # recommendation print out 
+    # display top 10 recommended songs 
     st.write(' ')
     st.markdown('##### Songs Recommended')
     st.table(similar_tracks[1:11])
     
-    # user's historical songs
+    # display user's historical songs
     user_his = data[data['id'] == selected_id][['name', 'artists']]
-    # st.write('---')
     st.markdown("##### User's Historical Records")
     st.table(user_his)
 
