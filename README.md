@@ -26,9 +26,9 @@ A project of collaborative filtering recommendation system, which using spotify 
 |spotify-logo.png|The Spotify logo image used in main page|
 |spotify-logo2.png|The Spotify logo image used in sidebar|
 
-### "results preview" folder
+### "images" folder
 
 - contained only the screenshot of each page created 
 
 
-![Image](results preview\page1-overview.png)
+![Image](images\page1-overview.png)
