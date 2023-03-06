@@ -14,12 +14,19 @@ A project of collaborative filtering recommendation system, which using spotify 
 
 ### DESCRIPTION OF UPLOADED FILES
 
-### code folder
+### "code" folder
+
+- contained all the codes, dataset, and some images for streamlit app design
 
 |File Name|Description|
 |---------|-----------|
-|bg2,jpg|Streamlit App's background image|
+|bg2.jpg|Streamlit App's background image|
 |main.py|The main code of this project (all in one file)|
 |spotify.csv|The Spotify dataset|
 |spotify-logo.png|The Spotify logo image used in main page|
 |spotify-logo2.png|The Spotify logo image used in sidebar|
+
+### "results preview" folder
+
+- contained only the screenshot of each page created 
+
