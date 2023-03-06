@@ -169,7 +169,7 @@ tabs = st.tabs(['Overview','Explore','Deploy'])
 
 with tabs[0]: 
     
-    # read data from .csv file and take first 3k data as sample
+    # read data from .csv file and take few data as sample
     data = pd.read_csv(DATA_PATH, encoding='unicode_escape')[:3000]
     
     st.write("##### Data Preview #####")
