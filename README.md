@@ -36,4 +36,5 @@ A project of collaborative filtering recommendation system, which using spotify 
 
 ![Image](images/page3-deploy.png)
 
-Thank you for reading !!!
+
+Thank you for taking the time to read my work !!!
