@@ -37,4 +37,4 @@ A project of collaborative filtering recommendation system, which using spotify 
 ![Image](images/page3-deploy.png)
 
 
-Thank you for taking the time to read my work !!!
+Thank you for reading my work!!! I appreciate your time and attention.
