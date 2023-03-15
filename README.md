@@ -26,15 +26,15 @@ A project of collaborative filtering recommendation system, which using spotify 
 |spotify-logo.png|The Spotify logo image used in main page|
 |spotify-logo2.png|The Spotify logo image used in sidebar|
 
-### "images" folder
+### "results" folder
 
 - contained only the screenshot of each page created 
 
 ### THE APP
 
-- this is the preview of the last page created which display the top 10 songs recommended for selected user, you may refer to "images" folder for other pages. 
+- this is the preview of the last page created which display the top 10 songs recommended for selected user, you may refer to "results" folder for other pages. 
 
-![Image](images/page3-deploy.png)
+![Image](results/page3-deploy.png)
 
 
 Thank you for reading my work!!! I appreciate your time and attention.
